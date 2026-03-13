@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HFK 멤버 리포트 | 2026 봄시즌</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #333;
+    background: #f5f5f5;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Screen Layout ── */
+  .screen-only { display: block; }
+  .print-only { display: none; }
+
+  .app-header {
+    background: #8B0000;
+    color: #fff;
+    padding: 32px 0;
+    text-align: center;
+  }
+  .app-header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .app-header p { font-size: 15px; opacity: 0.8; margin-top: 6px; }
+
+  .controls {
+    max-width: 900px;
+    margin: 32px auto 24px;
+    padding: 0 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .controls select, .controls button {
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+  }
+  .controls select { flex: 1; min-width: 160px; }
+  .controls button {
+    background: #8B0000;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .controls button:hover { background: #6d0000; }
+  .controls button.secondary {
+    background: #fff;
+    color: #8B0000;
+    border: 1px solid #8B0000;
+  }
+  .controls button.secondary:hover { background: #fdf5f5; }
+
+  .summary-cards {
+    max-width: 900px;
+    margin: 0 auto 32px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .summary-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid #e5e5e5;
+  }
+  .summary-card .label { font-size: 13px; color: #888; font-weight: 500; }
+  .summary-card .value { font-size: 32px; font-weight: 700; color: #8B0000; margin-top: 4px; }
+  .summary-card .sub { font-size: 13px; color: #555; margin-top: 4px; }
+
+  .team-list {
+    max-width: 900px;
+    margin: 0 auto 48px;
+    padding: 0 20px;
+  }
+  .team-section {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e5e5;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    background: #F5EBE0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .team-header:hover { background: #efe5d8; }
+  .team-header h3 { font-size: 16px; font-weight: 700; color: #222; }
+  .team-header .meta { font-size: 13px; color: #555; }
+  .team-body { display: none; padding: 0; }
+  .team-body.open { display: block; }
+  .member-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid #eee;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .member-row:hover { background: #fafafa; }
+  .member-row:last-child { border-bottom: none; }
+  .member-name { font-size: 14px; font-weight: 600; color: #222; min-width: 60px; }
+  .member-company { font-size: 13px; color: #555; flex: 1; }
+  .member-reg {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .member-reg.new { background: #8B0000; color: #fff; }
+  .member-reg.returning { background: #F0EAE2; color: #8B0000; }
+  .member-attendance {
+    display: flex;
+    gap: 4px;
+  }
+  .att-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .att-dot.present { background: #d4edda; color: #155724; }
+  .att-dot.absent { background: #f8d7da; color: #721c24; }
+  .att-dot.pending { background: #e9ecef; color: #adb5bd; }
+
+  /* ── Print Report Pages ── */
+  #report-container {
+    display: none;
+  }
+
+  .report-page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 20mm 18mm;
+    background: #fff;
+    position: relative;
+  }
+
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #8B0000;
+    margin-bottom: 24px;
+  }
+  .report-brand {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8B0000;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .report-season {
+    font-size: 11px;
+    color: #888;
+  }
+  .report-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 4px;
+  }
+  .report-subtitle {
+    font-size: 13px;
+    color: #555;
+  }
+
+  .report-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .report-info-item {
+    padding: 12px 16px;
+    background: #F5EBE0;
+    border-radius: 8px;
+  }
+  .report-info-item .label {
+    font-size: 11px;
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .report-info-item .value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+  }
+
+  .report-section {
+    margin-bottom: 24px;
+  }
+  .report-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #8B0000;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #ddd;
+    letter-spacing: 0.02em;
+  }
+
+  .attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .attendance-table th {
+    background: #F0EAE2;
+    padding: 8px 10px;
+    font-weight: 600;
+    color: #555;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  .attendance-table th:first-child { text-align: left; }
+  .attendance-table td {
+    padding: 8px 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+  }
+  .attendance-table td:first-child { text-align: left; font-weight: 500; }
+  .att-icon { font-size: 14px; }
+  .att-icon.yes { color: #28a745; }
+  .att-icon.no { color: #dc3545; }
+  .att-icon.na { color: #ccc; }
+
+  .rate-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .rate-label {
+    font-size: 12px;
+    color: #555;
+    min-width: 80px;
+  }
+  .rate-bar {
+    flex: 1;
+    height: 12px;
+    background: #eee;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .rate-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s;
+  }
+  .rate-bar-fill.high { background: #28a745; }
+  .rate-bar-fill.mid { background: #ffc107; }
+  .rate-bar-fill.low { background: #dc3545; }
+  .rate-value {
+    font-size: 13px;
+    font-weight: 700;
+    min-width: 40px;
+    text-align: right;
+  }
+
+  .insight-box {
+    background: #F5EBE0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .insight-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: #8B0000;
+    margin-bottom: 8px;
+  }
+  .insight-box p, .insight-box li {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #444;
+  }
+  .insight-box ul {
+    padding-left: 16px;
+    margin: 0;
+  }
+  .insight-box li { margin-bottom: 4px; }
+
+  .report-footer {
+    position: absolute;
+    bottom: 18mm;
+    left: 18mm;
+    right: 18mm;
+    text-align: center;
+    font-size: 10px;
+    color: #aaa;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+  }
+
+  /* ── Team Overview Report ── */
+  .team-overview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+  .team-overview-table th {
+    background: #8B0000;
+    color: #fff;
+    padding: 8px 6px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 10px;
+  }
+  .team-overview-table th:first-child { text-align: left; padding-left: 10px; }
+  .team-overview-table td {
+    padding: 6px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-size: 11px;
+  }
+  .team-overview-table td:first-child { text-align: left; font-weight: 500; padding-left: 10px; }
+  .team-overview-table tr:nth-child(even) { background: #fafafa; }
+
+  /* ── Print Styles ── */
+  @media print {
+    body { background: #fff; }
+    .screen-only { display: none !important; }
+    .print-only { display: block !important; }
+    #report-container { display: block !important; }
+
+    .report-page {
+      page-break-after: always;
+      margin: 0;
+      padding: 15mm 18mm;
+      box-shadow: none;
+    }
+    .report-page:last-child { page-break-after: auto; }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+  }
+
+  /* ── Screen preview of reports ── */
+  #report-container.preview {
+    display: block;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 48px;
+  }
+  #report-container.preview .report-page {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    border-radius: 8px;
+    margin-bottom: 32px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Screen UI ── -->
+<div class="screen-only" id="app">
+  <div class="app-header">
+    <h1>HFK Member Report</h1>
+    <p>2026 봄시즌 멤버 참여도 리포트</p>
+  </div>
+
+  <div class="controls">
+    <select id="teamFilter">
+      <option value="all">전체 팀</option>
+    </select>
+    <select id="regFilter">
+      <option value="all">전체 등록</option>
+      <option value="첫등록">첫등록만</option>
+      <option value="재등록">재등록만</option>
+    </select>
+    <button onclick="generateAllReports()">전체 리포트 생성</button>
+    <button onclick="generateTeamOverview()" class="secondary">팀 현황 리포트</button>
+    <button onclick="printReports()">PDF 출력</button>
+  </div>
+
+  <div class="summary-cards" id="summaryCards"></div>
+  <div class="team-list" id="teamList"></div>
+</div>
+
+<!-- ── Report Container (print target) ── -->
+<div id="report-container"></div>
+
+<script src="data.js"></script>
+<script>
+// ── Initialization ──
+document.addEventListener('DOMContentLoaded', () => {
+  populateFilters();
+  renderSummary();
+  renderTeamList();
+});
+
+function populateFilters() {
+  const sel = document.getElementById('teamFilter');
+  HFK_DATA.teams.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.name;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => { renderSummary(); renderTeamList(); });
+  document.getElementById('regFilter').addEventListener('change', () => { renderSummary(); renderTeamList(); });
+}
+
+function getFilteredTeams() {
+  const teamVal = document.getElementById('teamFilter').value;
+  const regVal = document.getElementById('regFilter').value;
+  let teams = teamVal === 'all' ? HFK_DATA.teams : HFK_DATA.teams.filter(t => t.name === teamVal);
+  if (regVal !== 'all') {
+    teams = teams.map(t => ({
+      ...t,
+      members: t.members.filter(m => m.reg === regVal)
+    })).filter(t => t.members.length > 0);
+  }
+  return teams;
+}
+
+function calcRate(arr) {
+  const done = arr.filter(v => v !== null);
+  if (done.length === 0) return null;
+  const present = done.filter(v => v === true).length;
+  return Math.round((present / done.length) * 100);
+}
+
+function renderSummary() {
+  const teams = getFilteredTeams();
+  const allMembers = teams.flatMap(t => t.members);
+  const newMembers = allMembers.filter(m => m.reg === '첫등록');
+  const retMembers = allMembers.filter(m => m.reg === '재등록');
+
+  const rates = allMembers.map(m => calcRate(m.attendance)).filter(v => v !== null);
+  const avgRate = rates.length > 0 ? Math.round(rates.reduce((a, b) => a + b, 0) / rates.length) : '-';
+
+  const eventRates = allMembers.map(m => calcRate(m.events)).filter(v => v !== null);
+  const avgEventRate = eventRates.length > 0 ? Math.round(eventRates.reduce((a, b) => a + b, 0) / eventRates.length) : '-';
+
+  document.getElementById('summaryCards').innerHTML = `
+    <div class="summary-card">
+      <div class="label">전체 멤버</div>
+      <div class="value">${allMembers.length}</div>
+      <div class="sub">${teams.length}개 팀</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">첫등록 / 재등록</div>
+      <div class="value">${newMembers.length} / ${retMembers.length}</div>
+      <div class="sub">첫등록률 ${allMembers.length > 0 ? Math.round(newMembers.length / allMembers.length * 100) : 0}%</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">팀 세션 출석률</div>
+      <div class="value">${avgRate === '-' ? '-' : avgRate + '%'}</div>
+      <div class="sub">진행된 세션 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">이벤트 참석률</div>
+      <div class="value">${avgEventRate === '-' ? '-' : avgEventRate + '%'}</div>
+      <div class="sub">PEST / AAR / HBR</div>
+    </div>
+  `;
+}
+
+function renderTeamList() {
+  const teams = getFilteredTeams();
+  const container = document.getElementById('teamList');
+  container.innerHTML = teams.map(team => {
+    const memberRows = team.members.map(m => {
+      const dots = m.attendance.map((v, i) => {
+        const cls = v === true ? 'present' : v === false ? 'absent' : 'pending';
+        const txt = v === true ? 'O' : v === false ? 'X' : '-';
+        return `<span class="att-dot ${cls}" title="${i+1}회차">${txt}</span>`;
+      }).join('');
+      return `
+        <div class="member-row" onclick="generateMemberReport('${team.name}', '${m.name}')">
+          <span class="member-name">${m.name}</span>
+          <span class="member-company">${m.company}</span>
+          <span class="member-reg ${m.reg === '첫등록' ? 'new' : 'returning'}">${m.reg}</span>
+          <div class="member-attendance">${dots}</div>
+        </div>
+      `;
+    }).join('');
+
+    const teamRate = team.members.map(m => calcRate(m.attendance)).filter(v => v !== null);
+    const avg = teamRate.length > 0 ? Math.round(teamRate.reduce((a,b)=>a+b,0) / teamRate.length) + '%' : '-';
+
+    return `
+      <div class="team-section">
+        <div class="team-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <h3>${team.name} <span style="font-weight:400;font-size:13px;color:#555;">(${team.members.length}명)</span></h3>
+          <span class="meta">${team.schedule} · 파트너: ${team.partner.name} · 출석률: ${avg}</span>
+        </div>
+        <div class="team-body">${memberRows}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── Report Generation ──
+function generateMemberReport(teamName, memberName) {
+  const team = HFK_DATA.teams.find(t => t.name === teamName);
+  const member = team.members.find(m => m.name === memberName);
+  const container = document.getElementById('report-container');
+
+  const isNew = member.reg === '첫등록';
+  const reportType = isNew ? '성장 리포트' : '참여도 리포트';
+
+  container.innerHTML = buildReportPage(team, member, reportType);
+  container.classList.add('preview');
+  container.scrollIntoView({ behavior: 'smooth' });
+}
+
+function generateAllReports() {
+  const teams = getFilteredTeams();
+  const container = document.getElementById('report-container');
+  let html = '';
+
+  teams.forEach(team => {
+    team.members.forEach(member => {
+      const reportType = member.reg === '첫등록' ? '성장 리포트' : '참여도 리포트';
+      html += buildReportPage(team, member, reportType);
+    });
+  });
+
+  container.innerHTML = html;
+  container.classList.add('preview');
+  container.scrollIntoView({ behavior: 'smooth' });
+}
+
+function generateTeamOverview() {
+  const teams = getFilteredTeams();
+  const container = document.getElementById('report-container');
+  container.innerHTML = buildTeamOverviewPage(teams);
+  container.classList.add('preview');
+  container.scrollIntoView({ behavior: 'smooth' });
+}
+
+function buildReportPage(team, member, reportType) {
+  const sessionRate = calcRate(member.attendance);
+  const eventRate = calcRate(member.events);
+  const totalAttendance = [...member.attendance, ...member.events];
+  const overallRate = calcRate(totalAttendance);
+
+  const sessionRows = team.dates.map((date, i) => {
+    const v = member.attendance[i];
+    const icon = v === true ? '<span class="att-icon yes">O</span>'
+               : v === false ? '<span class="att-icon no">X</span>'
+               : '<span class="att-icon na">-</span>';
+    return `<td>${icon}</td>`;
+  }).join('');
+
+  const eventRows = HFK_DATA.events.map((ev, i) => {
+    const v = member.events[i];
+    const icon = v === true ? '<span class="att-icon yes">O</span>'
+               : v === false ? '<span class="att-icon no">X</span>'
+               : '<span class="att-icon na">-</span>';
+    return `<td>${icon}</td>`;
+  }).join('');
+
+  const rateColor = (r) => r === null ? 'mid' : r >= 80 ? 'high' : r >= 50 ? 'mid' : 'low';
+  const rateDisplay = (r) => r === null ? '-' : r + '%';
+
+  // Insights
+  let insightHtml = '';
+  if (reportType === '성장 리포트') {
+    insightHtml = `
+      <div class="report-section">
+        <div class="report-section-title">GROWTH INSIGHTS</div>
+        <div class="insight-box">
+          <h4>관찰 포인트</h4>
+          <ul>
+            <li>첫 시즌 참여 멤버로, 팀 내 적응과 소속감 형성 과정 관찰이 필요합니다.</li>
+            <li>세션 참석 패턴을 통해 학습 몰입도와 커뮤니티 연결 수준을 확인합니다.</li>
+            <li>이벤트 참석 여부가 시즌 이후 재등록 의사에 영향을 미칩니다.</li>
+          </ul>
+        </div>
+        <div class="insight-box">
+          <h4>팀 참여 제안</h4>
+          <ul>
+            <li><strong>${team.name}</strong> 팀의 파트너 ${team.partner.name}님과의 1:1 체크인을 통해 초기 적응을 지원합니다.</li>
+            <li>팀 내 재등록 멤버와의 버디 매칭으로 커뮤니티 안착을 돕습니다.</li>
+          </ul>
+        </div>
+        <div class="insight-box">
+          <h4>4L 분석 체크리스트</h4>
+          <ul>
+            <li><strong>Liked</strong> — 이번 시즌에서 가장 만족한 경험은 무엇인가?</li>
+            <li><strong>Learned</strong> — 팀 세션을 통해 새롭게 배운 점은?</li>
+            <li><strong>Lacked</strong> — 아쉬웠거나 부족했던 부분은?</li>
+            <li><strong>Longed for</strong> — 다음에 기대하거나 바라는 점은?</li>
+          </ul>
+        </div>
+      </div>
+    `;
+  } else {
+    insightHtml = `
+      <div class="report-section">
+        <div class="report-section-title">PARTICIPATION INSIGHTS</div>
+        <div class="insight-box">
+          <h4>참여 패턴</h4>
+          <ul>
+            <li>재등록 멤버로, 커뮤니티 소속감과 지속 참여 의지를 확인합니다.</li>
+            <li>세션 + 이벤트 복합 참석률이 커뮤니티 활동 깊이를 나타냅니다.</li>
+            <li>다음 시즌 재등록 가능성을 참석률과 연계하여 예측합니다.</li>
+          </ul>
+        </div>
+        <div class="insight-box">
+          <h4>재등록 예측 지표</h4>
+          <ul>
+            <li><strong>팀 세션 출석률 80% 이상</strong> — 재등록 가능성 높음</li>
+            <li><strong>이벤트 1회 이상 참석</strong> — 커뮤니티 확장 관심 확인</li>
+            <li><strong>시즌 후반 연속 참석</strong> — 소속감 유지 신호</li>
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  // Team context
+  const teamNewCount = team.members.filter(m => m.reg === '첫등록').length;
+  const teamRetCount = team.members.filter(m => m.reg === '재등록').length;
+
+  return `
+    <div class="report-page">
+      <div class="report-header">
+        <div>
+          <div class="report-brand">HFK</div>
+          <div class="report-title">${reportType}</div>
+          <div class="report-subtitle">${member.name} · ${member.company}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="report-season">${HFK_DATA.season}</div>
+          <div style="font-size:11px;color:#888;margin-top:2px;">${HFK_DATA.seasonPeriod}</div>
+        </div>
+      </div>
+
+      <div class="report-info-grid">
+        <div class="report-info-item">
+          <div class="label">팀</div>
+          <div class="value">${team.name}</div>
+        </div>
+        <div class="report-info-item">
+          <div class="label">파트너</div>
+          <div class="value">${team.partner.name} (${team.partner.company})</div>
+        </div>
+        <div class="report-info-item">
+          <div class="label">일정</div>
+          <div class="value">${team.schedule}</div>
+        </div>
+        <div class="report-info-item">
+          <div class="label">등록 유형</div>
+          <div class="value">${member.reg}</div>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">TEAM SESSION ATTENDANCE</div>
+        <table class="attendance-table">
+          <thead>
+            <tr>
+              <th style="width:100px;">구분</th>
+              ${team.dates.map((d, i) => `<th>${i+1}회차<br><span style="font-weight:400;font-size:10px;">${d}</span></th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>출석</td>
+              ${sessionRows}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">EVENT ATTENDANCE</div>
+        <table class="attendance-table">
+          <thead>
+            <tr>
+              <th style="width:100px;">구분</th>
+              ${HFK_DATA.events.map(ev => `<th>${ev.name}<br><span style="font-weight:400;font-size:10px;">${ev.date}</span></th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>참석</td>
+              ${eventRows}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">ATTENDANCE RATE</div>
+        <div class="rate-bar-container">
+          <span class="rate-label">팀 세션</span>
+          <div class="rate-bar"><div class="rate-bar-fill ${rateColor(sessionRate)}" style="width:${sessionRate ?? 0}%"></div></div>
+          <span class="rate-value">${rateDisplay(sessionRate)}</span>
+        </div>
+        <div class="rate-bar-container">
+          <span class="rate-label">이벤트</span>
+          <div class="rate-bar"><div class="rate-bar-fill ${rateColor(eventRate)}" style="width:${eventRate ?? 0}%"></div></div>
+          <span class="rate-value">${rateDisplay(eventRate)}</span>
+        </div>
+        <div class="rate-bar-container">
+          <span class="rate-label" style="font-weight:600;">종합</span>
+          <div class="rate-bar"><div class="rate-bar-fill ${rateColor(overallRate)}" style="width:${overallRate ?? 0}%"></div></div>
+          <span class="rate-value" style="font-size:15px;">${rateDisplay(overallRate)}</span>
+        </div>
+      </div>
+
+      <div class="report-section" style="margin-bottom:12px;">
+        <div class="report-section-title">TEAM CONTEXT</div>
+        <div style="display:flex;gap:24px;font-size:12px;color:#555;">
+          <span>팀 인원: <strong>${team.members.length}명</strong></span>
+          <span>첫등록: <strong>${teamNewCount}명</strong></span>
+          <span>재등록: <strong>${teamRetCount}명</strong></span>
+          <span>첫등록률: <strong>${Math.round(teamNewCount / team.members.length * 100)}%</strong></span>
+        </div>
+      </div>
+
+      ${insightHtml}
+
+      <div class="report-footer">
+        HFK ${HFK_DATA.season} Member Report · Generated ${new Date().toLocaleDateString('ko-KR')}
+      </div>
+    </div>
+  `;
+}
+
+function buildTeamOverviewPage(teams) {
+  const rows = teams.map(team => {
+    const members = team.members;
+    const newCount = members.filter(m => m.reg === '첫등록').length;
+    const retCount = members.filter(m => m.reg === '재등록').length;
+    const rates = members.map(m => calcRate(m.attendance)).filter(v => v !== null);
+    const avgRate = rates.length > 0 ? Math.round(rates.reduce((a,b)=>a+b,0) / rates.length) : null;
+    const eventRates = members.map(m => calcRate(m.events)).filter(v => v !== null);
+    const avgEventRate = eventRates.length > 0 ? Math.round(eventRates.reduce((a,b)=>a+b,0) / eventRates.length) : null;
+
+    // per-session attendance counts
+    const sessionCounts = team.dates.map((_, i) => {
+      const done = members.filter(m => m.attendance[i] !== null);
+      const present = members.filter(m => m.attendance[i] === true);
+      return done.length > 0 ? `${present.length}/${done.length}` : '-';
+    });
+
+    return `<tr>
+      <td>${team.name}</td>
+      <td>${members.length}</td>
+      <td>${newCount}</td>
+      <td>${retCount}</td>
+      <td>${members.length > 0 ? Math.round(newCount/members.length*100) + '%' : '-'}</td>
+      ${sessionCounts.map(c => `<td>${c}</td>`).join('')}
+      <td style="font-weight:600;">${avgRate !== null ? avgRate + '%' : '-'}</td>
+      <td>${avgEventRate !== null ? avgEventRate + '%' : '-'}</td>
+    </tr>`;
+  }).join('');
+
+  const allMembers = teams.flatMap(t => t.members);
+  const totalNew = allMembers.filter(m => m.reg === '첫등록').length;
+  const totalRet = allMembers.filter(m => m.reg === '재등록').length;
+  const allRates = allMembers.map(m => calcRate(m.attendance)).filter(v => v !== null);
+  const totalAvg = allRates.length > 0 ? Math.round(allRates.reduce((a,b)=>a+b,0) / allRates.length) : null;
+
+  return `
+    <div class="report-page">
+      <div class="report-header">
+        <div>
+          <div class="report-brand">HFK</div>
+          <div class="report-title">팀 현황 리포트</div>
+          <div class="report-subtitle">${HFK_DATA.season} · 전체 팀 참여도 현황</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="report-season">${HFK_DATA.seasonPeriod}</div>
+        </div>
+      </div>
+
+      <div class="report-info-grid">
+        <div class="report-info-item">
+          <div class="label">전체 멤버</div>
+          <div class="value">${allMembers.length}명</div>
+        </div>
+        <div class="report-info-item">
+          <div class="label">첫등록 / 재등록</div>
+          <div class="value">${totalNew} / ${totalRet}</div>
+        </div>
+        <div class="report-info-item">
+          <div class="label">전체 첫등록률</div>
+          <div class="value">${allMembers.length > 0 ? Math.round(totalNew/allMembers.length*100) : 0}%</div>
+        </div>
+        <div class="report-info-item">
+          <div class="label">평균 세션 출석률</div>
+          <div class="value">${totalAvg !== null ? totalAvg + '%' : '-'}</div>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">TEAM PARTICIPATION OVERVIEW</div>
+        <table class="team-overview-table">
+          <thead>
+            <tr>
+              <th>팀</th>
+              <th>인원</th>
+              <th>첫등록</th>
+              <th>재등록</th>
+              <th>첫등록률</th>
+              <th>1회차</th>
+              <th>2회차</th>
+              <th>3회차</th>
+              <th>4회차</th>
+              <th>5회차</th>
+              <th>6회차</th>
+              <th>평균 출석률</th>
+              <th>이벤트</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section">
+        <div class="report-section-title">KEY METRICS</div>
+        <div class="insight-box">
+          <h4>소속감 지표: 첫등록 → 재등록 전환</h4>
+          <ul>
+            <li>이번 시즌 첫등록 멤버 <strong>${totalNew}명</strong>의 참여도가 재등록 전환의 선행지표입니다.</li>
+            <li>팀 세션 출석률과 이벤트 참석이 복합적으로 소속감을 형성합니다.</li>
+            <li>시즌 종료 후 첫등록 멤버의 재등록률을 추적하여 커뮤니티 건강도를 측정합니다.</li>
+          </ul>
+        </div>
+        <div class="insight-box">
+          <h4>이벤트 일정</h4>
+          <ul>
+            ${HFK_DATA.events.map(ev => `<li><strong>${ev.name}</strong> — ${ev.date}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+
+      <div class="report-footer">
+        HFK ${HFK_DATA.season} Team Overview Report · Generated ${new Date().toLocaleDateString('ko-KR')}
+      </div>
+    </div>
+  `;
+}
+
+function printReports() {
+  const container = document.getElementById('report-container');
+  if (!container.innerHTML.trim()) {
+    generateAllReports();
+  }
+  window.print();
+}
+</script>
+</body>
+</html>
