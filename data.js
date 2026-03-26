@@ -239,7 +239,6 @@ const HFK_DATA = {
         { name: '전신애', company: '비아트리스코리아', reg: '재등록', attendance: [true, null, null, null, null, null], events: [null, null, null, null] },
         { name: '정서연', company: 'CJ 올리브영', reg: '재등록', attendance: [true, null, null, null, null, null], events: [null, null, null, null] },
         { name: '조혜진', company: '-', reg: '재등록', attendance: [true, null, null, null, null, null], events: [true, null, null, null] },
-        { name: '이홍진', company: '다이소코리아', reg: '재등록', attendance: [true, null, null, null, null, null], events: [null, null, null, null] },
       ]
     },
   ]
