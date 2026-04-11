@@ -639,6 +639,17 @@ const HFK_DATA = {
             ]
           }
          },
+        { name: '이도희', company: '레드햇', reg: '첫등록', attendance: [false, true, null, null, null, null], events: [null, null, null, null],
+          report: {
+            checkpoint: '',
+            fourL: null,
+            nextSeason: '이번 시즌 마케팅디깅(Horizontal 트랙)의 경험을 바탕으로, 다음 시즌에 도전해볼 팀을 제안합니다.',
+            nextTeams: [
+              { name: 'CMO씽킹', track: 'Horizontal 트랙', desc: '마케팅 리더의 사고방식으로 확장' },
+              { name: '팔리는경험', track: 'Enrichment 트랙', desc: '마케팅에서 세일즈, 고객 경험까지 연결' }
+            ]
+          }
+         },
       ]
     },
     {
