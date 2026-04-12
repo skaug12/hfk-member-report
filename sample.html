@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HFK Member Report — Sample</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+  :root {
+    --hfk-red: #970101;
+    --hfk-burgundy: #441a15;
+    --hfk-espresso: #391200;
+    --hfk-charcoal: #2d2523;
+    --hfk-sand: #ceb9a4;
+    --hfk-light-sand: #ddcfbf;
+    --hfk-cream: #e1dac9;
+    --hfk-white: #f0eae2;
+    --hfk-coral: #ff6154;
+    --hfk-salmon: #ff9a92;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--hfk-charcoal);
+    background: var(--hfk-white);
+    letter-spacing: -0.01em;
+    padding: 40px 20px;
+  }
+
+  /* ── Sample badge ── */
+  .sample-banner {
+    max-width: 960px;
+    margin: 0 auto 24px;
+    background: var(--hfk-espresso);
+    color: var(--hfk-cream);
+    padding: 18px 28px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .sample-banner .left { display: flex; align-items: center; gap: 14px; }
+  .sample-banner .badge {
+    background: var(--hfk-coral);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+  .sample-banner h2 { font-size: 15px; font-weight: 700; color: var(--hfk-cream); }
+  .sample-banner p { font-size: 12px; color: var(--hfk-sand); opacity: 0.75; margin-top: 2px; }
+  .sample-banner a {
+    background: var(--hfk-red);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .sample-banner a:hover { background: var(--hfk-burgundy); }
+
+  /* ── Report Page ── */
+  .report-page {
+    width: 210mm;
+    max-width: 100%;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 18mm 20mm;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 1px 12px rgba(57,18,0,0.12);
+    border-radius: 8px;
+    border: 1px solid var(--hfk-cream);
+  }
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--hfk-red);
+    margin-bottom: 22px;
+  }
+  .report-brand {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--hfk-red);
+    letter-spacing: 0.08em;
+  }
+  .report-season { font-size: 11px; color: var(--hfk-sand); }
+  .report-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--hfk-charcoal);
+    margin-bottom: 3px;
+  }
+  .report-subtitle { font-size: 13px; color: var(--hfk-burgundy); opacity: 0.6; }
+
+  .report-meta-row {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--hfk-burgundy);
+    opacity: 0.7;
+    margin-bottom: 20px;
+  }
+
+  .report-section { margin-bottom: 20px; }
+  .report-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--hfk-red);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--hfk-cream);
+    letter-spacing: 0.06em;
+  }
+
+  .attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .attendance-table th {
+    background: var(--hfk-cream);
+    padding: 8px 6px;
+    font-weight: 600;
+    color: var(--hfk-burgundy);
+    text-align: center;
+    border-bottom: 1px solid var(--hfk-light-sand);
+    font-size: 11px;
+  }
+  .attendance-table th:first-child { text-align: left; padding-left: 12px; }
+  .attendance-table th .date {
+    display: block;
+    font-weight: 400;
+    font-size: 9px;
+    margin-top: 2px;
+    opacity: 0.7;
+  }
+  .attendance-table td {
+    padding: 9px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--hfk-white);
+  }
+  .attendance-table td:first-child { text-align: left; font-weight: 500; padding-left: 12px; }
+  .att-icon { font-size: 14px; font-weight: 700; }
+  .att-icon.yes { color: #2d8a4e; }
+  .att-icon.no { color: var(--hfk-coral); }
+  .att-icon.na { color: var(--hfk-light-sand); }
+
+  .rate-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 9px;
+  }
+  .rate-label { font-size: 12px; color: var(--hfk-burgundy); min-width: 96px; opacity: 0.7; }
+  .rate-bar { flex: 1; height: 10px; background: var(--hfk-white); border-radius: 5px; overflow: hidden; }
+  .rate-bar-fill { height: 100%; border-radius: 5px; }
+  .rate-bar-fill.high { background: #2d8a4e; }
+  .rate-bar-fill.mid { background: var(--hfk-sand); }
+  .rate-bar-fill.low { background: var(--hfk-coral); }
+  .rate-value { font-size: 13px; font-weight: 700; min-width: 40px; text-align: right; color: var(--hfk-charcoal); }
+
+  .insight-box {
+    background: var(--hfk-white);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+  }
+  .insight-box p { font-size: 12px; line-height: 1.8; color: var(--hfk-burgundy); margin: 0; }
+  .insight-box ul { padding-left: 16px; margin: 0; }
+  .insight-box li { font-size: 12px; line-height: 1.8; color: var(--hfk-burgundy); margin-bottom: 4px; }
+  .insight-box li strong { color: var(--hfk-charcoal); font-weight: 700; }
+
+  .next-team-row {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--hfk-cream);
+  }
+  .next-team-row:last-child { border-bottom: none; }
+  .next-team-row .name { font-size: 12px; font-weight: 700; color: var(--hfk-charcoal); white-space: nowrap; }
+  .next-team-row .track { font-size: 10px; color: var(--hfk-red); white-space: nowrap; font-weight: 600; }
+  .next-team-row .desc { font-size: 11px; color: var(--hfk-burgundy); opacity: 0.75; }
+
+  .report-footer {
+    margin-top: 28px;
+    text-align: center;
+    font-size: 9px;
+    color: var(--hfk-sand);
+    border-top: 1px solid var(--hfk-cream);
+    padding-top: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 16px 8px; }
+    .report-page { padding: 24px 18px; min-height: auto; }
+    .attendance-table { font-size: 10px; }
+    .attendance-table th { padding: 6px 3px; font-size: 9px; }
+    .attendance-table td { padding: 7px 3px; }
+    .rate-label { min-width: 72px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sample-banner">
+  <div class="left">
+    <span class="badge">SAMPLE</span>
+    <div>
+      <h2>이런 리포트가 시즌 종료 후 도착합니다</h2>
+      <p>아래는 가상 멤버의 풀 샘플입니다. 실제 리포트는 본인의 출석·녹취·4L 응답으로 자동 생성됩니다.</p>
+    </div>
+  </div>
+  <a href="index.html">← 대시보드로</a>
+</div>
+
+<div class="report-page">
+
+  <div class="report-header">
+    <div>
+      <div class="report-brand">HFK</div>
+      <div class="report-title">성장 리포트</div>
+      <div class="report-subtitle">이슬기 · HFK</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="report-season">2026 봄시즌</div>
+      <div style="font-size:10px;color:var(--hfk-light-sand);margin-top:2px;">2026년 3월 - 5월</div>
+    </div>
+  </div>
+
+  <div class="report-meta-row">
+    <span>AI부사수</span>
+    <span>금 19:30-22:00</span>
+    <span>첫등록</span>
+  </div>
+
+  <!-- Team Session Attendance -->
+  <div class="report-section">
+    <div class="report-section-title">TEAM SESSION ATTENDANCE</div>
+    <table class="attendance-table">
+      <thead>
+        <tr>
+          <th style="width:80px;">구분</th>
+          <th>1회차<span class="date">3/13</span></th>
+          <th>2회차<span class="date">3/27</span></th>
+          <th>3회차<span class="date">4/10</span></th>
+          <th>4회차<span class="date">4/24</span></th>
+          <th>5회차<span class="date">5/8</span></th>
+          <th>6회차<span class="date">5/22</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>출석</td>
+          <td><span class="att-icon yes">O</span></td>
+          <td><span class="att-icon yes">O</span></td>
+          <td><span class="att-icon no">X</span></td>
+          <td><span class="att-icon yes">O</span></td>
+          <td><span class="att-icon yes">O</span></td>
+          <td><span class="att-icon yes">O</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Event Attendance -->
+  <div class="report-section">
+    <div class="report-section-title">EVENT ATTENDANCE</div>
+    <table class="attendance-table">
+      <thead>
+        <tr>
+          <th style="width:80px;">구분</th>
+          <th>스페셜토크<span class="date">3/18</span></th>
+          <th>PEST 브리핑<span class="date">3/25</span></th>
+          <th>AAR 밋업<span class="date">4/22</span></th>
+          <th>HBR 포럼<span class="date">5/20</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>참석</td>
+          <td><span class="att-icon yes">O</span></td>
+          <td><span class="att-icon yes">O</span></td>
+          <td><span class="att-icon no">X</span></td>
+          <td><span class="att-icon yes">O</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Attendance Rate -->
+  <div class="report-section">
+    <div class="report-section-title">ATTENDANCE RATE</div>
+    <div class="rate-bar-container">
+      <span class="rate-label">Team Session</span>
+      <div class="rate-bar"><div class="rate-bar-fill high" style="width:83%"></div></div>
+      <span class="rate-value">83%</span>
+    </div>
+    <div class="rate-bar-container">
+      <span class="rate-label">Events</span>
+      <div class="rate-bar"><div class="rate-bar-fill mid" style="width:75%"></div></div>
+      <span class="rate-value">75%</span>
+    </div>
+    <div class="rate-bar-container">
+      <span class="rate-label" style="font-weight:600;">Overall</span>
+      <div class="rate-bar"><div class="rate-bar-fill high" style="width:80%"></div></div>
+      <span class="rate-value" style="font-size:14px;">80%</span>
+    </div>
+  </div>
+
+  <!-- Checkpoint -->
+  <div class="report-section">
+    <div class="report-section-title">시즌 체크포인트</div>
+    <div class="insight-box">
+      <p>"AI를 도구가 아니라 동료처럼 쓸 수 있는 사람이 되고 싶다"는 목표로 첫 시즌을 시작했습니다. 시즌 초반에는 프롬프트를 길게 쓰는 것이 잘 쓰는 것이라고 생각했지만, 3회차 이후 "AI에게 맥락을 주는 일이 곧 내가 일을 정의하는 일"이라는 관점으로 바뀐 것이 가장 큰 변화입니다. 4회차 케이스 스터디에서는 동료에게 직접 워크플로우를 시연했고, 5회차에는 본인 업무 자동화 사례를 직접 가져와 팀과 공유했습니다. 시즌 후반으로 갈수록 발화량과 질문의 깊이가 함께 늘어난 멤버입니다.</p>
+    </div>
+  </div>
+
+  <!-- 4L -->
+  <div class="report-section">
+    <div class="report-section-title">4L 요약</div>
+    <div class="insight-box">
+      <ul>
+        <li><strong>Liked</strong> — 매 회차 다른 멤버가 가져온 실무 사례를 함께 뜯어보는 시간이 좋았습니다. "내 업무에도 똑같이 적용할 수 있겠다"는 생각이 들 때가 가장 많았습니다.</li>
+        <li><strong>Learned</strong> — AI를 잘 쓰는 사람은 프롬프트를 잘 쓰는 사람이 아니라, 자기 일을 잘 정의하는 사람이라는 것. 도구보다 문제 정의가 먼저라는 걸 6회를 거치며 체득했습니다.</li>
+        <li><strong>Lacked</strong> — 회차 사이에 직접 시도해보고 결과를 가져오는 루틴이 약했습니다. 다음에는 회차마다 작은 실험 하나씩 가져오는 걸 스스로 약속하고 싶습니다.</li>
+        <li><strong>Longed for</strong> — 시즌이 끝나도 멤버들과 사례를 계속 주고받을 수 있는 채널이 있으면 좋겠습니다. AI 도구가 빠르게 바뀌어서, 함께 따라잡을 동료가 필요합니다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Next Season -->
+  <div class="report-section">
+    <div class="report-section-title">다음 시즌 제안</div>
+    <div class="insight-box">
+      <p style="margin-bottom:10px;">이번 시즌 AI부사수(Enrichment 트랙)에서 도구 활용의 기초를 다졌습니다. 다음 시즌에는 AI를 본인 업무에 직접 결합하는 단계로 확장해보시면 좋겠습니다.</p>
+      <div class="next-team-row">
+        <span class="name">AI핸즈온</span>
+        <span class="track">Enrichment 트랙</span>
+        <span class="desc">— 본인 업무 자동화 프로젝트를 6주간 직접 만들고 회고합니다</span>
+      </div>
+      <div class="next-team-row">
+        <span class="name">전략가의일</span>
+        <span class="track">Realignment 트랙</span>
+        <span class="desc">— AI 도구를 전략 사고와 결합해 의사결정의 질을 높입니다</span>
+      </div>
+      <div class="next-team-row">
+        <span class="name">설득의구조</span>
+        <span class="track">Enrichment 트랙</span>
+        <span class="desc">— AI로 정리한 결과를 사람을 움직이는 메시지로 바꾸는 훈련을 합니다</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="report-footer">
+    HFK 2026 봄시즌 Member Report · Sample Preview · 본 페이지는 풀 샘플이며 실제 데이터가 아닙니다
+  </div>
+
+</div>
+
+</body>
+</html>
