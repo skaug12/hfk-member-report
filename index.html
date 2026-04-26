@@ -765,6 +765,7 @@ function buildReportPage(team, member, reportType) {
   const rd = r => r === null ? '-' : r + '%';
 
   const rpt = member.report || {};
+  const rmp = member.roadmap || null;
 
   // 시즌 체크포인트
   const checkpointContent = rpt.checkpoint
@@ -849,6 +850,35 @@ function buildReportPage(team, member, reportType) {
       <div class="report-section-title">다음 시즌 제안</div>
       <div class="insight-box">${nextSeasonContent}</div>
     </div>
+    ${rmp ? `
+    <div class="report-section">
+      <div class="report-section-title">HFK 로드맵</div>
+      <div class="insight-box">
+        <p style="font-size:12px;line-height:1.8;color:var(--hfk-burgundy);margin:0 0 12px 0;">
+          <strong>${rmp.totalCount}번째 시즌</strong> 등록${rmp.firstSeason ? ` · ${rmp.firstSeason}부터 함께해 오셨습니다` : ''}${rmp.consecutive ? ` · 최근 ${rmp.consecutive}회 연속 참여` : ''}.
+        </p>
+        ${rmp.timeline && rmp.timeline.length > 0 ? `
+        <div style="margin-bottom:14px;">
+          <div style="font-size:10px;font-weight:700;color:var(--hfk-red);letter-spacing:0.04em;margin-bottom:6px;">시즌 이력</div>
+          ${rmp.timeline.map(t => `
+            <div style="font-size:11px;line-height:1.7;color:var(--hfk-burgundy);display:flex;gap:8px;align-items:baseline;">
+              <span style="opacity:0.5;width:48px;flex-shrink:0;">${t.season}</span>
+              <strong style="color:var(--hfk-charcoal);">${t.team || '—'}</strong>
+              ${t.track ? `<span style="font-size:10px;opacity:0.6;">${t.track}</span>` : ''}
+            </div>
+          `).join('')}
+        </div>
+        ` : ''}
+        ${rmp.insights ? `
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--hfk-red);letter-spacing:0.04em;margin-bottom:6px;">HFK에서 관찰한 흐름</div>
+          ${rmp.insights.observation ? `<p style="font-size:12px;line-height:1.8;color:var(--hfk-burgundy);margin:0 0 8px 0;">${rmp.insights.observation}</p>` : ''}
+          ${rmp.insights.suggestion ? `<p style="font-size:12px;line-height:1.8;color:var(--hfk-burgundy);margin:0;">${rmp.insights.suggestion}</p>` : ''}
+        </div>
+        ` : ''}
+      </div>
+    </div>
+    ` : ''}
     <div class="report-footer">HFK ${HFK_DATA.season} Member Report · Generated ${new Date().toLocaleDateString('ko-KR')}</div>
   </div>`;
 }
@@ -916,6 +946,33 @@ function printReports() {
   if (!c.innerHTML.trim()) generateAllReports();
   window.print();
 }
+
+// URL 파라미터로 자동 멤버 리포트 표시 (PDF 생성용)
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const teamName = params.get('team');
+  const memberName = params.get('name');
+  if (teamName && memberName) {
+    try {
+      generateMemberReport(teamName, memberName);
+      // PDF 모드: 헤더와 다른 UI 숨김
+      if (params.get('print') === '1') {
+        const style = document.createElement('style');
+        style.textContent = `
+          .nav-tabs, .controls, .dashboard-grid, header, .team-section, button, .insight-box .add-button { display: none !important; }
+          body { background: white !important; padding: 0 !important; margin: 0 !important; }
+          .container { max-width: 100% !important; padding: 0 !important; }
+          #report-container { padding: 0 !important; }
+          .report-page { box-shadow: none !important; margin: 0 !important; padding: 24px !important; }
+        `;
+        document.head.appendChild(style);
+        document.body.setAttribute('data-print-mode', '1');
+      }
+    } catch (e) {
+      console.error('PDF 모드 자동 렌더링 실패:', e);
+    }
+  }
+});
 </script>
 </body>
 </html>
