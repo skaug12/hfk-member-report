@@ -1,6 +1,6 @@
 const HFK_DATA = {
   season: '2026 여름시즌',
-  seasonPeriod: '2026년 3월 - 5월',
+  seasonPeriod: '2026년 6월 - 8월',
   events: [],
   teams: [
     {
@@ -9,7 +9,7 @@ const HFK_DATA = {
         name: '김동일',
         company: '네이버'
       },
-      schedule: '',
+      schedule: '일 14:30-17:00',
       dates: ['6/21', '7/19', '7/26', '8/2', '8/16', '8/30'],
       members: [
         {
@@ -62,7 +62,7 @@ const HFK_DATA = {
         name: '전소영',
         company: 'Telta'
       },
-      schedule: '',
+      schedule: '토 10:30-13:00',
       dates: ['6/20', '7/4', '7/18', '8/8', '8/15', '8/29'],
       members: [
         {
@@ -152,12 +152,72 @@ const HFK_DATA = {
       ]
     },
     {
+      name: '경영브릿지-심리학',
+      partner: {
+        name: '임아영',
+        company: 'Morphic'
+      },
+      schedule: '목 19:30-22:00',
+      dates: ['6/25', '7/2', '7/9', '7/30', '8/13', '8/27'],
+      members: [
+        {
+          name: '박아란',
+          company: '전국화물자동차공제조합',
+          reg: '재등록',
+          attendance: [false, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김하나',
+          company: 'HERE Technologies',
+          reg: '재등록',
+          attendance: [true, false, true, null, null, null],
+          events: []
+        },
+        {
+          name: '임성우',
+          company: '삼성전자 (DS)',
+          reg: '재등록',
+          attendance: [true, true, false, null, null, null],
+          events: []
+        },
+        {
+          name: '이성규',
+          company: '플렉스튜디오',
+          reg: '첫등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김지원',
+          company: '기업은행',
+          reg: '첫등록',
+          attendance: [true, false, true, null, null, null],
+          events: []
+        },
+        {
+          name: '이세림',
+          company: 'SK텔레콤',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '유은지',
+          company: '중랑문화재단',
+          reg: '첫등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        }
+      ]
+    },
+    {
       name: '리더의서재',
       partner: {
         name: '심현보',
         company: 'Kearney'
       },
-      schedule: '',
+      schedule: '금 19:30-22:00',
       dates: ['7/3', '7/17', '7/31', '8/14', '8/21', '8/28'],
       members: [
         {
@@ -544,7 +604,7 @@ const HFK_DATA = {
         name: '김민정',
         company: '오늘의집'
       },
-      schedule: '',
+      schedule: '목 19:30-22:00',
       dates: ['6/4', '6/11', '6/18', '7/23', '8/6', '8/20'],
       members: [
         {
@@ -578,12 +638,357 @@ const HFK_DATA = {
       ]
     },
     {
+      name: '서울재발견',
+      partner: {
+        name: '이동진',
+        company: '트래블코드'
+      },
+      schedule: '화 19:30-22:00',
+      dates: ['6/16', '6/30', '7/14', '7/28', '8/11', '8/25'],
+      members: [
+        {
+          name: '김세아',
+          company: '한국휴렛팩커드엔터프라이즈',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김한울이',
+          company: '한국관광공사',
+          reg: '재등록',
+          attendance: [true, true, false, null, null, null],
+          events: []
+        },
+        {
+          name: '돈명진',
+          company: 'LX하우시스',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '원정현',
+          company: 'IQVIA',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '이홍진',
+          company: '다이소코리아',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '권도현',
+          company: '미래파',
+          reg: '재등록',
+          attendance: [true, false, false, null, null, null],
+          events: []
+        },
+        {
+          name: '이정민',
+          company: 'SB성보',
+          reg: '첫등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '신상호',
+          company: '(주)에어코드',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '송선혜',
+          company: '플렉스튜디오',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김형록',
+          company: '삼양식품',
+          reg: '첫등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '류채희',
+          company: '오뚜기',
+          reg: '재등록',
+          attendance: [true, true, false, null, null, null],
+          events: []
+        },
+        {
+          name: '이수림',
+          company: '오뚜기',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '유다솜',
+          company: '오비맥주',
+          reg: '첫등록',
+          attendance: [true, false, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김준영',
+          company: 'SKT',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김경아',
+          company: '프리랜서',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '이정준',
+          company: '메모리올',
+          reg: '재등록',
+          attendance: [true, true, false, null, null, null],
+          events: []
+        },
+        {
+          name: '김정민',
+          company: '아모레퍼시픽',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '박지영',
+          company: '코람코자산신탁',
+          reg: '첫등록',
+          attendance: [true, null, false, null, null, null],
+          events: []
+        },
+        {
+          name: '황선정',
+          company: 'BMS제약',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        }
+      ]
+    },
+    {
+      name: '중간리더십',
+      partner: {
+        name: '김라현',
+        company: '회계법인 회계사'
+      },
+      schedule: '일 10:30-13:00',
+      dates: ['6/28', '7/12', '7/26', '8/9', '8/23', '9/6'],
+      members: [
+        {
+          name: '심수정',
+          company: '디비에스은행',
+          reg: '재등록',
+          attendance: [true, true, false, null, null, null],
+          events: []
+        },
+        {
+          name: '홍수경',
+          company: '대한항공',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김태림',
+          company: 'BMW코리아',
+          reg: '첫등록',
+          attendance: [false, false, false, null, null, null],
+          events: []
+        },
+        {
+          name: '임세리',
+          company: '에이블런',
+          reg: '첫등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '전신애',
+          company: '비아트리스코리아',
+          reg: '재등록',
+          attendance: [false, true, false, null, null, null],
+          events: []
+        }
+      ]
+    },
+    {
+      name: '직장인문학',
+      partner: {
+        name: '이강원',
+        company: '정신분석가, 국민대 MBA 교수'
+      },
+      schedule: '토 10:30-13:00',
+      dates: ['6/13', '6/27', '7/11', '7/25', '8/1', '8/22'],
+      members: [
+        {
+          name: '이현주',
+          company: '디자인피버',
+          reg: '재등록',
+          attendance: [true, true, false, true, null, null],
+          events: []
+        },
+        {
+          name: '서영인',
+          company: 'CJ제일제당',
+          reg: '재등록',
+          attendance: [true, true, true, true, null, null],
+          events: []
+        },
+        {
+          name: '김진',
+          company: '오비맥주',
+          reg: '첫등록',
+          attendance: [false, false, true, false, null, null],
+          events: []
+        },
+        {
+          name: '박혜림',
+          company: '한국서부발전',
+          reg: '재등록',
+          attendance: [true, true, true, true, null, null],
+          events: []
+        },
+        {
+          name: '임종수',
+          company: '더블익스',
+          reg: '첫등록',
+          attendance: [true, true, false, false, null, null],
+          events: []
+        }
+      ]
+    },
+    {
+      name: '컨퍼런스콜',
+      partner: {
+        name: '권소이',
+        company: '해외 미디어 플랫폼사'
+      },
+      schedule: '토 10:30-13:00',
+      dates: ['6/20', '7/4', '7/18', '8/1', '8/15', '8/29'],
+      members: [
+        {
+          name: '문윤선',
+          company: 'SK텔레콤',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김민주',
+          company: '폴라초이스 코리아',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '홍은지',
+          company: '삼성전자',
+          reg: '재등록',
+          attendance: [false, false, false, null, null, null],
+          events: []
+        },
+        {
+          name: '한승훈',
+          company: '효성화학',
+          reg: '첫등록',
+          attendance: [false, true, false, null, null, null],
+          events: []
+        },
+        {
+          name: '허재영',
+          company: '현대자동차',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '제정경',
+          company: '에스앤가든',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '최지영',
+          company: 'Bms제약',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '신윤아',
+          company: '이지스자산운용',
+          reg: '재등록',
+          attendance: [true, false, true, null, null, null],
+          events: []
+        },
+        {
+          name: '배진현',
+          company: '애경산업',
+          reg: '첫등록',
+          attendance: [true, true, false, null, null, null],
+          events: []
+        },
+        {
+          name: '김선아',
+          company: '발렌시아가 코리아',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '이민영',
+          company: 'HD한국조선해양',
+          reg: '첫등록',
+          attendance: [true, false, false, null, null, null],
+          events: []
+        },
+        {
+          name: '김나의',
+          company: 'HYBE',
+          reg: '첫등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '김초연',
+          company: '국민은행',
+          reg: '재등록',
+          attendance: [false, true, true, null, null, null],
+          events: []
+        },
+        {
+          name: '오지영',
+          company: '_',
+          reg: '재등록',
+          attendance: [true, true, true, null, null, null],
+          events: []
+        }
+      ]
+    },
+    {
       name: '팀오호츠크',
       partner: {
         name: '김재윤',
         company: 'HFK'
       },
-      schedule: '',
+      schedule: '토 10:30-13:00',
       dates: ['6/27', '7/11', '7/25', '8/8', '8/21', ''],
       members: [
         {
@@ -631,12 +1036,12 @@ const HFK_DATA = {
       ]
     },
     {
-      name: 'AI부사수',
+      name: 'AI부사수FRI',
       partner: {
         name: '이슬기',
         company: 'HFK'
       },
-      schedule: '',
+      schedule: '금 19:30-22:00',
       dates: ['6/12', '6/19', '6/26', '7/10', '7/24', '8/7'],
       members: [
         {
@@ -775,12 +1180,12 @@ const HFK_DATA = {
       ]
     },
     {
-      name: 'AI부사수',
+      name: 'AI부사수SUN',
       partner: {
         name: '이슬기',
         company: 'HFK'
       },
-      schedule: '',
+      schedule: '일 10:30-13:00',
       dates: ['6/21', '7/5', '7/19', '8/2', '8/16', '8/30'],
       members: [
         {
@@ -931,7 +1336,7 @@ const HFK_DATA = {
         name: '이 림',
         company: '이미커피'
       },
-      schedule: '',
+      schedule: '목 19:30-22:00',
       dates: ['6/11', '6/25', '7/9', '7/23', '8/6', '8/20'],
       members: [
         {
